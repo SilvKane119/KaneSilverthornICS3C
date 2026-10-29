@@ -30,11 +30,11 @@ bullet_x = player_x
 bullet_y = player_y
 bullet_speed = 10 
 bullet_active = False
-
+last_direction = "up"
 # Control how many pixels the square moves each frame
 speed = 3
-enemy_speed = 1
-enemy_speed2 = 1.3
+enemy_speed = 0.7
+enemy_speed2 = 0.9
 
 # Keep the game running
 running = True
@@ -52,22 +52,45 @@ while running:
     # Move left/right/up/down
     if keys[pygame.K_LEFT] and player_x > 0:
         player_x -= speed
+        last_direction == "left"
     if keys[pygame.K_RIGHT] and player_x < 750:
         player_x += speed
+        last_direction == "right"
     if keys[pygame.K_UP] and player_y > 0:
         player_y -= speed
+        last_direction == "up"
     if keys[pygame.K_DOWN] and player_y < 550:
         player_y += speed
+        last_direction == "down"
+
 
     # Shooting mechanics (Space bar)
     if keys[pygame.K_SPACE]:
         if not bullet_active:
-            bullet_x = player_x + 21  # Center the bullet relative to player width (50)
-            bullet_y = player_y
-            bullet_active = True
-
-    if bullet_active:
-        bullet_y -= bullet_speed
+            if last_direction == "up":
+                bullet_x = player_x + 21  # Center the bullet relative to player width (50)
+                bullet_y = player_y
+                bullet_active = True
+                if bullet_active:
+                    bullet_y -= bullet_speed
+            elif last_direction == "down":
+                bullet_x = player_x + 21  # Center the bullet relative to player width (50)
+                bullet_y = player_y
+                bullet_active = True
+                if bullet_active:
+                    bullet_y += bullet_speed
+            elif last_direction == "left":
+                bullet_x = player_x  # Center the bullet relative to player width (50)
+                bullet_y = player_y + 21
+                bullet_active = True
+                if bullet_active:
+                    bullet_x -= bullet_speed
+            elif last_direction == "right":
+                bullet_x = player_x  # Center the bullet relative to player width (50)
+                bullet_y = player_y + 21
+                bullet_active = True
+                if bullet_active:
+                    bullet_x += bullet_speed
         # Deactivate if it goes off-screen
         if bullet_y < 0:
             bullet_active = False
