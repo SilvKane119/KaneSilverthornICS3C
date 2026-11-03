@@ -17,6 +17,7 @@ YELLOW = (255, 255, 0)
 GREY = (212, 212, 212)
 GOLD = (255, 205, 0)
 ORANGE =(255, 155, 0)
+
 # Store the player's and enemy starting position
 player_x = 375
 player_y = 275
@@ -27,9 +28,15 @@ enemy1_y = 200
 enemy2_x = 550
 enemy2_y = 350
 
+enemy_difficulty = 0
+
 #Power Up Defining
 kill = 0
+
 wide_bullet = False
+
+tall_bullet = False
+
 speed_up = False
 
 # Bullet variables
@@ -41,13 +48,29 @@ bullet_direction = "up"
 last_direction = "up"
 bullet_width = 7
 bullet_height = 7
+
 # Control how many pixels the square moves each frame
+
 speed = 3
 if speed_up == True:
     speed = speed + 2
     speed_up = False
+
 enemy_speed = 0.7
+if enemy_difficulty == 5:
+    enemy_speed = enemy_speed + 0.2
+if enemy_difficulty == 10:
+    enemy_speed = enemy_speed + 0.3
+if enemy_difficulty == 20:
+    enemy_speed = enemy_speed + 0.5
+
 enemy_speed2 = 0.9
+if enemy_difficulty == 5:
+    enemy_speed2 = enemy_speed2 + 0.2
+if enemy_difficulty == 10:
+    enemy_speed2 = enemy_speed2 + 0.3
+if enemy_difficulty == 20:
+    enemy_speed2 = enemy_speed2 + 0.5
 
 # Keep the game running
 running = True
@@ -154,6 +177,7 @@ while running:
         enemy1_x = random.randint(0, 770)
         enemy1_y = random.randint(0, 570)
         kill == kill + 1
+        enemy_difficulty == enemy_difficulty + 1
         bullet_active = False
 
     if bullet_active and bullet_rect.colliderect(enemy2_rect):
