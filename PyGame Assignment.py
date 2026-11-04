@@ -168,8 +168,12 @@ while running:
 
     # Bullet collision with enemies
     if bullet_active and bullet_rect.colliderect(enemy1_rect):
-        enemy1_x = random.randint(0, 770)
-        enemy1_y = random.randint(0, 570)
+        enemy1_x = random.randint(-10, 810)
+        enemy1_y = random.randint(-10, 610)
+        if enemy1_x >= 0 or enemy1_x <= 800:
+            enemy1_x = random.randint(-10, 810)
+        if enemy1_y >= 0 or enemy1_y <= 600:
+            enemy1_y = random.randint(-10, 610)
         kill += 1
         enemy_difficulty += 1
         bullet_active = False
@@ -195,10 +199,10 @@ while running:
             speed += 2  # Speed up power-up
         elif power_up_type == 2:
             tall_bullet = True
-            bullet_height = 20  # Tall bullet power-up
+            bullet_height += 4  # Tall bullet power-up
         elif power_up_type == 3:
             wide_bullet = True
-            bullet_width = 20  # Wide bullet power-up
+            bullet_width += 4  # Wide bullet power-up
         
         power_up_active = False
         kill = 0  # Reset kills so power-ups can spawn again later
