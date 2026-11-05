@@ -17,10 +17,15 @@ YELLOW = (255, 255, 0)
 GREY = (212, 212, 212)
 GOLD = (255, 205, 0)
 ORANGE =(255, 155, 0)
+MAROON = (166, 0, 0)
+MAGETA = (238, 0, 255)
 
 # Store the player's and enemy starting position
 player_x = 375
 player_y = 275
+
+player_width = 50
+player_height = 50
 
 enemy1_x = 100
 enemy1_y = 200
@@ -28,13 +33,19 @@ enemy1_y = 200
 enemy2_x = 550
 enemy2_y = 350
 
+boss_x = 375
+boss_y = -80
+
 enemy_difficulty = 0
+
+boss_spawn = 0
 
 # Power Up Defining & Variables
 kill = 0
 wide_bullet = False
 tall_bullet = False
 speed_up = False
+player_shrink = False
 
 power_up_active = False
 power_up_type = 0
@@ -154,11 +165,11 @@ while running:
         enemy2_y -= enemy_speed
 
     # Rects for collision detection
-    player_rect = pygame.Rect(player_x, player_y, 50, 50)
+    player_rect = pygame.Rect(player_x, player_y, player_width, player_height)
     enemy1_rect = pygame.Rect(enemy1_x, enemy1_y, 30, 30)
     enemy2_rect = pygame.Rect(enemy2_x, enemy2_y, 30, 30)
     bullet_rect = pygame.Rect(bullet_x, bullet_y, bullet_width, bullet_height)
-
+    boss_rect = pygame.Rect(boss_x,boss_y, 70, 70)
     # Player collision with enemies (Game Over)
     if player_rect.colliderect(enemy1_rect) or player_rect.colliderect(enemy2_rect):
         pygame.display.set_caption("YOU LOSE")
@@ -213,7 +224,7 @@ while running:
     # Draw game objects
     pygame.draw.rect(screen, BLUE, player_rect)
     pygame.draw.rect(screen, RED, enemy1_rect)
-    pygame.draw.rect(screen, GREEN, enemy2_rect)
+    pygame.draw.rect(screen, RED, enemy2_rect)
     
     if bullet_active:
         pygame.draw.rect(screen, YELLOW, bullet_rect)
