@@ -21,6 +21,9 @@ MAROON = (166, 0, 0)
 MAGETA = (238, 0, 255)
 
 # Store the player's and enemy starting position
+enemy1_spawn = 1
+enemy2_spawn = 1
+
 player_x = 375
 player_y = 275
 
@@ -37,6 +40,9 @@ boss_x = 375
 boss_y = -80
 
 enemy_difficulty = 0
+hard1 = False
+hard2 = False
+hard3 = False
 
 boss_spawn = 0
 
@@ -67,20 +73,8 @@ bullet_height = 7
 speed = 3
 
 enemy_speed = 0.7
-if enemy_difficulty == 5:
-    enemy_speed = enemy_speed + 0.2
-if enemy_difficulty == 10:
-    enemy_speed = enemy_speed + 0.3
-if enemy_difficulty == 20:
-    enemy_speed = enemy_speed + 0.5
 
 enemy_speed2 = 0.9
-if enemy_difficulty == 5:
-    enemy_speed2 = enemy_speed2 + 0.2
-if enemy_difficulty == 10:
-    enemy_speed2 = enemy_speed2 + 0.3
-if enemy_difficulty == 20:
-    enemy_speed2 = enemy_speed2 + 0.5
 
 # Keep the game running
 running = True
@@ -169,7 +163,7 @@ while running:
     enemy1_rect = pygame.Rect(enemy1_x, enemy1_y, 30, 30)
     enemy2_rect = pygame.Rect(enemy2_x, enemy2_y, 30, 30)
     bullet_rect = pygame.Rect(bullet_x, bullet_y, bullet_width, bullet_height)
-    boss_rect = pygame.Rect(boss_x,boss_y, 70, 70)
+    boss_rect = pygame.Rect(boss_x, boss_y, 70, 70)
     # Player collision with enemies (Game Over)
     if player_rect.colliderect(enemy1_rect) or player_rect.colliderect(enemy2_rect):
         pygame.display.set_caption("YOU LOSE")
@@ -179,22 +173,61 @@ while running:
 
     # Bullet collision with enemies
     if bullet_active and bullet_rect.colliderect(enemy1_rect):
-        enemy1_x = random.randint(-10, 810)
-        enemy1_y = random.randint(-10, 610)
-        if enemy1_x >= 0 or enemy1_x <= 800:
+        enemy1_spawn = random.randint(1, 4)
+        if enemy1_spawn == 1:
             enemy1_x = random.randint(-10, 810)
-        if enemy1_y >= 0 or enemy1_y <= 600:
+            enemy1_y = random.randint(-20, -10)
+        elif enemy1_spawn == 2:
+            enemy1_x = random.randint(810, 820)
+            enemy1_y = random.randint(-10, 610)
+        elif enemy1_spawn == 3:
+            enemy1_x = random.randint(-10, 810)
+            enemy1_y = random.randint(610, 620)
+        elif enemy1_spawn == 4:
+            enemy1_x = random.randint(-20, -10)
             enemy1_y = random.randint(-10, 610)
         kill += 1
         enemy_difficulty += 1
         bullet_active = False
 
     if bullet_active and bullet_rect.colliderect(enemy2_rect):
-        enemy2_x = random.randint(0, 770)
-        enemy2_y = random.randint(0, 570)
+        enemy2_spawn = random.randint(1, 4)
+        if enemy2_spawn == 1:
+            enemy2_x = random.randint(-10, 810)
+            enemy2_y = random.randint(-20, -10)
+        elif enemy2_spawn == 2:
+            enemy2_x = random.randint(810, 820)
+            enemy2_y = random.randint(-10, 610)
+        elif enemy2_spawn == 3:
+            enemy2_x = random.randint(-10, 810)
+            enemy2_y = random.randint(610, 620)
+        elif enemy2_spawn == 4:
+            enemy2_x = random.randint(-20, -10)
+            enemy2_y = random.randint(-10, 610)
         kill += 1
         enemy_difficulty += 1
         bullet_active = False
+
+    # Enemy Difficulty Increase
+    if enemy_difficulty == 10 and enemy_speed == 0.7 and enemy_speed2 == 0.9:
+        hard1 = True
+    if enemy_difficulty == 25 and enemy_speed == 0.9 and enemy_speed2 == 1.1:
+        hard2 = True
+    if enemy_difficulty == 50 and enemy_speed < 1 and enemy_speed2 < 1.2:
+        hard3 = True
+
+    if hard1 == True:
+        enemy_speed += 0.2
+        enemy_speed2 += 0.2
+        hard1 == False
+    if hard2 == True:
+        enemy_speed += 0.3
+        enemy_speed += 0.3
+        hard2 == False
+    if hard3 == True:
+        enemy_speed += 0.5
+        enemy_speed2 += 0.5
+        hard3 == False
 
     # Power Up Spawning Logic (Spawns once when kill count >= 10 and no power up is currently out)
     if kill >= 10 and not power_up_active:
