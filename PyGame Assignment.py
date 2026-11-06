@@ -18,7 +18,12 @@ GREY = (212, 212, 212)
 GOLD = (255, 205, 0)
 ORANGE =(255, 155, 0)
 MAROON = (166, 0, 0)
-MAGETA = (238, 0, 255)
+MAGENTA = (238, 0, 255)
+BOSSC1 = (212, 202, 202)
+BOSSC2 = (212, 190, 190)
+BOSSC3 = (212, 174, 174)
+BOSSC4 = (199, 148, 148)
+BOSSC5 = (181, 129, 129)
 
 # Store the player's and enemy starting position
 enemy1_spawn = 1
@@ -38,13 +43,16 @@ enemy2_y = 350
 
 boss_x = 375
 boss_y = -80
-
+boss_hp = 30
+# Difficulty Defining
 enemy_difficulty = 0
 hard1 = False
 hard2 = False
 hard3 = False
 
+# Boss Defining
 boss_spawn = 0
+boss_battle = False
 
 # Power Up Defining & Variables
 kill = 0
@@ -75,6 +83,8 @@ speed = 3
 enemy_speed = 0.7
 
 enemy_speed2 = 0.9
+
+boss_speed = 0.5
 
 # Keep the game running
 running = True
@@ -187,7 +197,6 @@ while running:
             enemy1_x = random.randint(-20, -10)
             enemy1_y = random.randint(-10, 610)
         kill += 1
-        enemy_difficulty += 1
         bullet_active = False
 
     if bullet_active and bullet_rect.colliderect(enemy2_rect):
@@ -205,33 +214,32 @@ while running:
             enemy2_x = random.randint(-20, -10)
             enemy2_y = random.randint(-10, 610)
         kill += 1
-        enemy_difficulty += 1
         bullet_active = False
 
     # Enemy Difficulty Increase
-    if enemy_difficulty == 10 and enemy_speed == 0.7 and enemy_speed2 == 0.9:
+    if enemy_difficulty == 1:
         hard1 = True
-    if enemy_difficulty == 25 and enemy_speed == 0.9 and enemy_speed2 == 1.1:
+    if enemy_difficulty == 2:
         hard2 = True
-    if enemy_difficulty == 50 and enemy_speed < 1 and enemy_speed2 < 1.2:
+    if enemy_difficulty == 3:
         hard3 = True
 
     if hard1 == True:
-        enemy_speed += 0.2
-        enemy_speed2 += 0.2
+        enemy_speed = 0.9
+        enemy_speed2 = 1.1
         hard1 == False
     if hard2 == True:
-        enemy_speed += 0.3
-        enemy_speed += 0.3
+        enemy_speed = 1.2
+        enemy_speed = 1.4
         hard2 == False
     if hard3 == True:
-        enemy_speed += 0.5
-        enemy_speed2 += 0.5
+        enemy_speed = 1.7
+        enemy_speed2 = 1.9
         hard3 == False
 
     # Power Up Spawning Logic (Spawns once when kill count >= 10 and no power up is currently out)
     if kill >= 10 and not power_up_active:
-        power_up_type = random.randint(1, 3)
+        power_up_type = random.randint(1, 5)
         power_up_x = random.randint(50, 750)
         power_up_y = random.randint(50, 550)
         power_up_rect = pygame.Rect(power_up_x, power_up_y, 18, 18)
@@ -240,20 +248,75 @@ while running:
     # Power-Up Collection Collision Check
     if power_up_active and player_rect.colliderect(power_up_rect):
         if power_up_type == 1:
-            speed += 2  # Speed up power-up
+            speed += 0.7  # Speed up power-up
         elif power_up_type == 2:
             tall_bullet = True
             bullet_height += 4  # Tall bullet power-up
         elif power_up_type == 3:
             wide_bullet = True
             bullet_width += 4  # Wide bullet power-up
-        
+        elif power_up_type == 4:
+            player_height -= 4  # Player Shrink power-up
+            player_width -= 4
+        elif power_up_type == 5:
+            bullet_speed += 3. # Bullet Speed power-up
+        if boss_battle == False:
+            boss_spawn += 1
         power_up_active = False
         kill = 0  # Reset kills so power-ups can spawn again later
 
-    # Paint the background to clear the previous frame
-    screen.fill(GREY)
+    # Boss Screen Darkening
+    if boss_spawn == 1:
+        screen.fill(BOSSC1)
+    elif boss_spawn == 2:
+        screen.fill(BOSSC2)
+    elif boss_spawn == 3:
+        screen.fill(BOSSC3)
+    elif boss_spawn == 4:
+        screen.fill(BOSSC4)
+    elif boss_spawn == 5:
+        screen.fill(BOSSC5)
+        boss_battle = True
+    else:
+        screen.fill(GREY)
 
+    # Everything Relating To The Boss vvv
+    if boss_battle == True:
+
+        boss_x == 375
+        boss_y == -80
+
+        # Boss Tracking Logic
+        if boss_x < player_x:
+            boss_x += boss_speed
+        elif boss_x > player_x:
+            boss_x -= boss_speed
+            
+        if boss_y < player_y:
+            boss_y += boss_speed
+        elif boss_y > player_y:
+            boss_y -= boss_speed
+
+        pygame.draw.rect(screen, MAROON, boss_rect)
+        if bullet_active and bullet_rect.colliderect(boss_rect):
+            boss_hp = boss_hp - 1
+            bullet_active = False
+
+        # Player Dying To Boss
+        if player_rect.colliderect(boss_rect):
+            pygame.display.set_caption("YOU LOSE")
+            pygame.display.flip()
+            time.sleep(2)
+            running = False
+
+        # Boss Defeat
+        if boss_hp <= 0:
+            boss_battle = False
+            enemy_difficulty += 1
+            boss_spawn == 0
+            boss_x == 375
+            boss_y == -80
+            
     # Draw game objects
     pygame.draw.rect(screen, BLUE, player_rect)
     pygame.draw.rect(screen, RED, enemy1_rect)
@@ -270,6 +333,10 @@ while running:
             pygame.draw.circle(screen, GOLD, (power_up_x, power_up_y), 9)
         elif power_up_type == 3:
             pygame.draw.circle(screen, ORANGE, (power_up_x, power_up_y), 9)
+        elif power_up_type == 4:
+            pygame.draw.circle(screen, MAGENTA, (power_up_x, power_up_y), 9)
+        elif power_up_type == 5:
+            pygame.draw.circle(screen, YELLOW, (power_up_x, power_up_y), 9)
 
     # Show the updated screen
     pygame.display.flip()
