@@ -281,7 +281,7 @@ while running:
         screen.fill(GREY)
 
     # Everything Relating To The Boss vvv
-    if boss_battle == True:
+    if boss_battle == True and boss_hp > 0:
 
         boss_x == 375
         boss_y == -80
@@ -299,7 +299,7 @@ while running:
 
         pygame.draw.rect(screen, MAROON, boss_rect)
         if bullet_active and bullet_rect.colliderect(boss_rect):
-            boss_hp = boss_hp - 1
+            boss_hp -= 1
             bullet_active = False
 
         # Player Dying To Boss
@@ -310,13 +310,15 @@ while running:
             running = False
 
         # Boss Defeat
-        if boss_hp <= 0:
-            boss_battle = False
-            enemy_difficulty += 1
-            boss_spawn == 0
-            boss_x == 375
-            boss_y == -80
-            
+    if boss_hp <= 0:
+        enemy_difficulty += 1
+        boss_spawn -= 5
+        boss_x == 375
+        boss_y == -80
+        boss_battle = False
+        boss_hp == 30
+        screen.fill(GREY)
+
     # Draw game objects
     pygame.draw.rect(screen, BLUE, player_rect)
     pygame.draw.rect(screen, RED, enemy1_rect)
