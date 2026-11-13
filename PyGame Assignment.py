@@ -95,7 +95,7 @@ clock = pygame.time.Clock()
 pygame.mixer.music.load("Theme.mp3")
 while running:
     
-    pygame.mixer.music.play()
+    #pygame.mixer.music.play()
     # Check for events, including closing the window
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
