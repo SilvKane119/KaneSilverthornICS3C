@@ -1,6 +1,7 @@
 import pygame
 import time
 import random
+import os
 
 pygame.init()
 
@@ -24,6 +25,8 @@ BOSSC2 = (212, 190, 190)
 BOSSC3 = (212, 174, 174)
 BOSSC4 = (199, 148, 148)
 BOSSC5 = (181, 129, 129)
+
+pygame.mixer.init()
 
 # Store the player's and enemy starting position
 enemy1_spawn = 1
@@ -89,8 +92,10 @@ boss_speed = 0.5
 # Keep the game running
 running = True
 clock = pygame.time.Clock()
-
+pygame.mixer.music.load("Theme.mp3")
 while running:
+    
+    pygame.mixer.music.play()
     # Check for events, including closing the window
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -116,6 +121,8 @@ while running:
     # Shooting mechanics (Space bar)
     if keys[pygame.K_SPACE]:
         if not bullet_active:
+            pygame.mixer.music.load("Space_Gun.wav")
+            pygame.mixer.music.play()
             bullet_direction = last_direction  # Lock in the direction it was fired
             if bullet_direction == "up":
                 bullet_x = player_x + 21
@@ -312,11 +319,11 @@ while running:
         # Boss Defeat
     if boss_hp <= 0:
         enemy_difficulty += 1
-        boss_spawn -= 5
-        boss_x == 375
-        boss_y == -80
+        boss_spawn = 0
+        boss_x = 375
+        boss_y = -80
         boss_battle = False
-        boss_hp == 30
+        boss_hp = 30
         screen.fill(GREY)
 
     # Draw game objects
